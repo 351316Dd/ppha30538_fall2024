@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<!-- saved from url=(0096)file:///Users/doudouliu/Desktop/Snake%202/ppha30538_fall2024/problem_sets/ps1/PS1%20Jiaxuan.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ps1-jiaxuan</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="./ps1-jiaxuan pdf_files/clipboard.min.js"></script>
+<script src="./ps1-jiaxuan pdf_files/quarto.js"></script>
+<script src="./ps1-jiaxuan pdf_files/popper.min.js"></script>
+<script src="./ps1-jiaxuan pdf_files/tippy.umd.min.js"></script>
+<script src="./ps1-jiaxuan pdf_files/anchor.min.js"></script>
+<link href="./ps1-jiaxuan pdf_files/tippy.css" rel="stylesheet">
+<link href="./ps1-jiaxuan pdf_files/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="./ps1-jiaxuan pdf_files/bootstrap.min.js"></script>
+<link href="./ps1-jiaxuan pdf_files/bootstrap-icons.css" rel="stylesheet">
+<link href="./ps1-jiaxuan pdf_files/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<p>import pandas as pd ## 1. “This submission is my work alone and complies with the 30538 integrity policy.” # Add your initials to indicate your agreement: <strong>JL_<em><strong> # # 2. “I have uploaded the names of anyone I worked with on the problem set here” </strong>none</em></strong> (1 point) # # 3. Late coins used this pset: <strong><em>1</em></strong> Late coins left after submission: <strong><em>idk</em></strong> # # 4. Knit your <code>ps1.qmd</code> to an HTML file to make <code>ps1.html</code>. # # 5. Save your HTML file as a PDF and upload your <code>ps1.pdf</code> to Gradescope. # - The PDF should not exceed 25 pages. Use <code>head()</code> and resize figures when appropriate. # # 6. Push <code>ps1.qmd</code> and <code>ps1.html</code> to your GitHub repo. It is fine to use GitHub Desktop. # # 7. Submit <code>ps1.pdf</code> via Gradescope (4 points). # # 8. Tag your submission in Gradescope.</p>
+<p>file_path = ‘/Users/doudouliu/Desktop/Snake 2/ppha30538_fall2024/problem_sets/ps1/data/parking_tickets_one_percent.csv’</p>
+<p>#Q1.1 import pandas as pd df_1 = pd.read_csv(file_path) df_1.head() import time as t begin = t.time()</p>
+<p>#record the ending time end = t.time()</p>
+<p>#get the difference time_used = end - begin print (time_used)</p>
+<p>#time used is about 1.08 seconds +/- 0.001</p>
+<section id="assert-statement" class="level1">
+<h1>Assert statement</h1>
+<p>assert df_1.shape[0] == 287458, “Row count is off”</p>
+<p>#1.2 import os data_size = os.path.getsize(file_path)</p>
+<p>#change the unit data_size_mb = data_size / (1024 * 1024) print (data_size_mb) #The size in mb is 79.78</p>
+<p>#1.3 #eye ball the columns, are they sorted df_1.head() #issued date is sorted</p>
+</section>
+<section id="check-if-columns-with-numeric-values-are-sorted" class="level1">
+<h1>Check if columns with numeric values are sorted</h1>
+<p>def check_sorted_numeric_columns(df): numeric_cols = df.select_dtypes(include=[‘number’]).columns # Select only numeric columns sorted_columns = {}</p>
+<pre><code>for col in numeric_cols:
+    sorted_columns[col] = df[col].is_monotonic_increasing  # Check if the column is sorted
+
+return sorted_columns</code></pre>
+</section>
+<section id="check-if-columns-with-numeric-values-are-sorted-1" class="level1">
+<h1>Check if columns with numeric values are sorted</h1>
+<p>def check_sorted_numeric_columns(df): # Select only numeric</p>
+<pre><code>sorted_columns = df.select_dtypes(include=['number']).apply(lambda col: col.is_monotonic_increasing)
+return sorted_columns</code></pre>
+</section>
+<section id="run-the-function" class="level1">
+<h1>Run the function</h1>
+<p>sorted_col = check_sorted_numeric_columns(df_1)</p>
+</section>
+<section id="print-the-result" class="level1">
+<h1>Print the result</h1>
+<p>for col, is_sorted in sorted_col.items(): print(f”Is ‘{col}’ sorted? {is_sorted}“) #just making sure df_1.head()</p>
+</section>
+<section id="section" class="level1">
+<h1>2.1</h1>
+</section>
+<section id="convert-issue_date-to-datetime-format" class="level1">
+<h1>Convert ‘issue_date’ to datetime format</h1>
+<p>df_1[‘issue_date’] = pd.to_datetime(df_1[‘issue_date’])</p>
+</section>
+<section id="distill-year" class="level1">
+<h1>distill year</h1>
+<p>df_1[‘year’] = df_1[‘issue_date’].dt.year</p>
+</section>
+<section id="subset-tickets-from-2017" class="level1">
+<h1>subset tickets from 2017</h1>
+<p>ticket_17 = df_1[df_1[‘year’] == 2017]</p>
+</section>
+<section id="count-the-number-of-tickets" class="level1">
+<h1>Count the number of tickets</h1>
+<p>ticket_17_count = ticket_17.shape[0] print(f”Number of tickets issued in 2017 (sample): {ticket_17_count}“) # The number of tickets issued in 2017 (sample) is 22,364 # Since this is a 1% sample of the population, we scale the number up by 100 print(f”Number of tickets issued in 2017 (population): {ticket_17_count * 100}“) # The number of tickets issued in 2017 (population) is estimated to be 2,236,400 # According to the ProPublica web, the total number of tickets issued in fiscal year 2017 was over 3 million, # which is about 50% more than our estimation based on the sample. # This suggests that our sample might not be representative and could be downwardly biased due to randomization failures.</p>
+<p>#2.2 import matplotlib.pyplot as plt</p>
+</section>
+<section id="section-1" class="level1">
+<h1></h1>
+<p>v_cards = df_1[‘violation_description’].value_counts()</p>
+</section>
+<section id="choose-the-big-20" class="level1">
+<h1>choose the big 20</h1>
+<p>big_20 = v_cards.head(20)</p>
+</section>
+<section id="plot-them" class="level1">
+<h1>plot them</h1>
+<p>plt.figure(figsize=(10, 6))<br>
+big_20.plot(kind=‘bar’)</p>
+</section>
+<section id="add-titles-and-labels" class="level1">
+<h1>Add titles and labels</h1>
+<p>plt.title(‘20 Most Frequent Violation’) plt.ylabel(‘Count’) plt.xlabel(‘Violation Description’)</p>
+</section>
+<section id="show-the-plot" class="level1">
+<h1>Show the plot</h1>
+<p>plt.show()</p>
+<p>#3.1 # crate list of the the variables and data types data = { ‘Variable Name’: [ ‘ticket_number’, ‘issue_date’, ‘violation_location’, ‘license_plate_number’, ‘license_plate_state’, ‘license_plate_type’, ‘zipcode’, ‘violation_code’, ‘violation_description’, ‘fine_level2_amount’, ‘current_amount_due’, ‘total_payments’, ‘ticket_queue’, ‘ticket_queue_date’, ‘notice_level’, ‘hearing_disposition’, ‘notice_number’, ‘officer’, ‘address’ ], ‘Data Type’: [ ‘Quantitative (Q)’, ‘Temporal (T)’, ‘Nominal (N)’, ‘Nominal (N)’, ‘Nominal (N)’, ‘Nominal (N)’, ‘Quantitative (Q)’, ‘Nominal (N)’, ‘Nominal (N)’, ‘Quantitative (Q)’, ‘Quantitative (Q)’, ‘Quantitative (Q)’, ‘Nominal (N)’, ‘Temporal (T)’, ‘Ordinal (O)’, ‘Nominal (N)’, ‘Quantitative (Q)’, ‘Nominal (N)’, ‘Nominal (N)’ ] }</p>
+</section>
+<section id="format-the-markdown-table" class="level1">
+<h1>Format the markdown table</h1>
+<p>header = “| Name | Type |” separator = “|—————————|——————|” rows = [f”| {var:&lt;25} | {dtype:&lt;16} |” for var, dtype in zip(data[‘Variable Name’], data[‘Data Type’])]</p>
+</section>
+<section id="combine-the-header-separator-and-rows-into-a-list" class="level1">
+<h1>Combine the header, separator, and rows into a list</h1>
+<p>markdown_table = “”.join([header, separator] + rows)</p>
+</section>
+<section id="print-the-markdown-table" class="level1">
+<h1>Print the markdown table</h1>
+<p>print(markdown_table)</p>
+</section>
+<section id="explanation-of-the-columns" class="level1">
+<h1>Explanation of the columns</h1>
+<p>explanation = ““” ## Explanation of Multiple Types:</p>
+<p><strong><code>zipcode</code></strong>: - While denoted in numbers, <code>zipcode</code> can also be treated as a nominal variable because it indicates regional information and doesn’t imply anything in itself</p>
+<p>““”</p>
+</section>
+<section id="print-the-explanation" class="level1">
+<h1>Print the explanation</h1>
+<p>print(explanation)</p>
+<p>#3.3 #my comoputer crashed on this question for some unfathomable reasons</p>
+<p>#3.4 import matplotlib.pyplot as plt import seaborn as sns</p>
+</section>
+<section id="step-1-extract-the-month-and-day-from-the-issue_date" class="level1">
+<h1>Step 1: Extract the month and day from the ‘issue_date’</h1>
+<p>df_1[‘month’] = df_1[‘issue_date’].dt.month df_1[‘day’] = df_1[‘issue_date’].dt.day</p>
+</section>
+<section id="generate-pivot-table-for-heatmap" class="level1">
+<h1>generate pivot table for heatmap</h1>
+<p>heatmapyy = df_1.pivot_table(index=‘day’, columns=‘month’, values=‘ticket_number’, aggfunc=‘count’)</p>
+</section>
+<section id="create-heatmap" class="level1">
+<h1>create heatmap</h1>
+<p>plt.figure(figsize=(12, 6)) sns.heatmap(heatmapyy, cmap=‘coolwarm’, annot=True, fmt=‘g’)</p>
+</section>
+<section id="add-asesthtic" class="level1">
+<h1>Add asesthtic</h1>
+<p>plt.title(‘Number of Tickets Issued by Day and Month’) plt.ylabel(‘Day’) plt.xlabel(‘Month’)</p>
+<p>plt.show()</p>
+<p>#3.5 # Select data for the top 5 most common violation types big_5 = df_1[‘violation_description’].value_counts().head(5).index # Get the top 5 violations df_36 = df_1[df_1[‘violation_description’].isin(big_5)] # Subset the data to only include these violations</p>
+</section>
+<section id="extract-month-and-year-month-columns-for-time-based-analysis" class="level1">
+<h1>Extract month and year-month columns for time-based analysis</h1>
+<p>df_36[‘month’] = df_36[‘issue_date’].dt.month # Extract the month df_36[‘yr_n_month’] = df_36[‘issue_date’].dt.to_period(‘M’) # Create a column with the year and month</p>
+</section>
+<section id="create-a-pivot-table-with-yr_n_month-as-rows-and-violation_description-as-columns" class="level1">
+<h1>Create a pivot table with ‘yr_n_month’ as rows and ‘violation_description’ as columns</h1>
+<p>pivot_table_36 = df_36.pivot_table(index=‘yr_n_month’, columns=‘violation_description’, values=‘ticket_number’, aggfunc=‘count’)</p>
+</section>
+<section id="plot-the-data-using-a-heatmap" class="level1">
+<h1>Plot the data using a heatmap</h1>
+<p>import matplotlib.pyplot as plt import seaborn as sns</p>
+<p>plt.figure(figsize=(12, 6)) # Set the figure size for the plot sns.heatmap(pivot_table_36.T, cmap=‘coolwarm’, annot=False) # Create a heatmap to show the number of tickets over time</p>
+</section>
+<section id="add-element" class="level1">
+<h1>Add element</h1>
+<p>plt.title(‘Number of Tickets Issued Over Time for Top 5 Violation Types’) # Title of the plot plt.ylabel(‘Violation Type’) # Label for y-axis plt.xlabel(‘Year-Month’) # Label for x-axis</p>
+</section>
+<section id="plot-them-1" class="level1">
+<h1>plot them</h1>
+<p>plt.tight_layout() # Adjust layout to prevent clipping plt.show()</p>
+<p>#3.6 #for heatmap #One advantage of visualizing ticket issuance across different times of the year is that it helps identify trends, such as whether more tickets are issued during certain seasons, months, or days. However, a drawback is that it doesn’t offer detailed information about the types of violations or specific vehicles involved, and it may be challenging to interpret for those unfamiliar with heatmaps or seasonal patterns.</p>
+<p>#for lasagna #One advantage is that it effectively shows how ticket issuance varies over time for different violation types, allowing you to visualize trends and identify spikes in enforcement for specific violations. However, a drawback is that it can be harder to interpret compared to simpler bar plots or line charts and may become overwhelming if there are too many categories or time points to analyze.</p>
+<p>#3.7 #The <strong>Lasagna Plot</strong> effectively shows uneven enforcement over time, highlighting changes in ticket issuance for different violations. Its heatmap design makes it easy to spot trends, such as peaks and dips, clearly displaying variations across time periods.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
