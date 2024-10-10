@@ -1,9 +1,16 @@
-```{python}
+```{python, echo=True, results='markup', fig.show='hold'}
+
 import pandas as pd
+
+
+#title: "PS1"
+#author: "Jiaxuan Liu"
+
 ## 1. “This submission is my work alone and complies with the 30538 integrity policy.”
 #    Add your initials to indicate your agreement: **JL__**
 #
 # 2. “I have uploaded the names of anyone I worked with on the problem set here” **none_** (1 point)
+
 #
 # 3. Late coins used this pset: **_1_** Late coins left after submission: **_idk_**
 #
@@ -229,3 +236,5 @@ plt.show()
 
 #3.7
 #The **Lasagna Plot** effectively shows uneven enforcement over time, highlighting changes in ticket issuance for different violations. Its heatmap design makes it easy to spot trends, such as peaks and dips, clearly displaying variations across time periods.
+
+

@@ -46,12 +46,64 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>import pandas as pd ## 1. “This submission is my work alone and complies with the 30538 integrity policy.” # Add your initials to indicate your agreement: <strong>JL_<em><strong> # # 2. “I have uploaded the names of anyone I worked with on the problem set here” </strong>none</em></strong> (1 point) # # 3. Late coins used this pset: <strong><em>1</em></strong> Late coins left after submission: <strong><em>idk</em></strong> # # 4. Knit your <code>ps1.qmd</code> to an HTML file to make <code>ps1.html</code>. # # 5. Save your HTML file as a PDF and upload your <code>ps1.pdf</code> to Gradescope. # - The PDF should not exceed 25 pages. Use <code>head()</code> and resize figures when appropriate. # # 6. Push <code>ps1.qmd</code> and <code>ps1.html</code> to your GitHub repo. It is fine to use GitHub Desktop. # # 7. Submit <code>ps1.pdf</code> via Gradescope (4 points). # # 8. Tag your submission in Gradescope.</p>
+<p>import pandas as pd</p>
+<p>#title: “PS1” #author: “Jiaxuan Liu”</p>
+<section id="this-submission-is-my-work-alone-and-complies-with-the-30538-integrity-policy." class="level2">
+<h2 class="anchored" data-anchor-id="this-submission-is-my-work-alone-and-complies-with-the-30538-integrity-policy.">1. “This submission is my work alone and complies with the 30538 integrity policy.”</h2>
+</section>
+<section id="add-your-initials-to-indicate-your-agreement-jl__" class="level1">
+<h1>Add your initials to indicate your agreement: **JL__**</h1>
+</section>
+<section id="section" class="level1">
+<h1></h1>
+</section>
+<section id="i-have-uploaded-the-names-of-anyone-i-worked-with-on-the-problem-set-here-none_-1-point" class="level1">
+<h1>2. “I have uploaded the names of anyone I worked with on the problem set here” <strong>none_</strong> (1 point)</h1>
+</section>
+<section id="section-1" class="level1">
+<h1></h1>
+</section>
+<section id="late-coins-used-this-pset-1-late-coins-left-after-submission-idk" class="level1">
+<h1>3. Late coins used this pset: <strong><em>1</em></strong> Late coins left after submission: <strong><em>idk</em></strong></h1>
+</section>
+<section id="section-2" class="level1">
+<h1></h1>
+</section>
+<section id="knit-your-ps1.qmd-to-an-html-file-to-make-ps1.html." class="level1">
+<h1>4. Knit your <code>ps1.qmd</code> to an HTML file to make <code>ps1.html</code>.</h1>
+</section>
+<section id="section-3" class="level1">
+<h1></h1>
+</section>
+<section id="save-your-html-file-as-a-pdf-and-upload-your-ps1.pdf-to-gradescope." class="level1">
+<h1>5. Save your HTML file as a PDF and upload your <code>ps1.pdf</code> to Gradescope.</h1>
+</section>
+<section id="the-pdf-should-not-exceed-25-pages.-use-head-and-resize-figures-when-appropriate." class="level1">
+<h1>- The PDF should not exceed 25 pages. Use <code>head()</code> and resize figures when appropriate.</h1>
+</section>
+<section id="section-4" class="level1">
+<h1></h1>
+</section>
+<section id="push-ps1.qmd-and-ps1.html-to-your-github-repo.-it-is-fine-to-use-github-desktop." class="level1">
+<h1>6. Push <code>ps1.qmd</code> and <code>ps1.html</code> to your GitHub repo. It is fine to use GitHub Desktop.</h1>
+</section>
+<section id="section-5" class="level1">
+<h1></h1>
+</section>
+<section id="submit-ps1.pdf-via-gradescope-4-points." class="level1">
+<h1>7. Submit <code>ps1.pdf</code> via Gradescope (4 points).</h1>
+</section>
+<section id="section-6" class="level1">
+<h1></h1>
+</section>
+<section id="tag-your-submission-in-gradescope." class="level1">
+<h1>8. Tag your submission in Gradescope.</h1>
 <p>file_path = ‘/Users/doudouliu/Desktop/Snake 2/ppha30538_fall2024/problem_sets/ps1/data/parking_tickets_one_percent.csv’</p>
 <p>#Q1.1 import pandas as pd df_1 = pd.read_csv(file_path) df_1.head() import time as t begin = t.time()</p>
 <p>#record the ending time end = t.time()</p>
 <p>#get the difference time_used = end - begin print (time_used)</p>
 <p>#time used is about 1.08 seconds +/- 0.001</p>
+</section>
 <section id="assert-statement" class="level1">
 <h1>Assert statement</h1>
 <p>assert df_1.shape[0] == 287458, “Row count is off”</p>
@@ -81,7 +133,7 @@ return sorted_columns</code></pre>
 <h1>Print the result</h1>
 <p>for col, is_sorted in sorted_col.items(): print(f”Is ‘{col}’ sorted? {is_sorted}“) #just making sure df_1.head()</p>
 </section>
-<section id="section" class="level1">
+<section id="section-7" class="level1">
 <h1>2.1</h1>
 </section>
 <section id="convert-issue_date-to-datetime-format" class="level1">
@@ -101,7 +153,7 @@ return sorted_columns</code></pre>
 <p>ticket_17_count = ticket_17.shape[0] print(f”Number of tickets issued in 2017 (sample): {ticket_17_count}“) # The number of tickets issued in 2017 (sample) is 22,364 # Since this is a 1% sample of the population, we scale the number up by 100 print(f”Number of tickets issued in 2017 (population): {ticket_17_count * 100}“) # The number of tickets issued in 2017 (population) is estimated to be 2,236,400 # According to the ProPublica web, the total number of tickets issued in fiscal year 2017 was over 3 million, # which is about 50% more than our estimation based on the sample. # This suggests that our sample might not be representative and could be downwardly biased due to randomization failures.</p>
 <p>#2.2 import matplotlib.pyplot as plt</p>
 </section>
-<section id="section-1" class="level1">
+<section id="section-8" class="level1">
 <h1></h1>
 <p>v_cards = df_1[‘violation_description’].value_counts()</p>
 </section>
