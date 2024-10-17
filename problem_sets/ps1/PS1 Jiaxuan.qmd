@@ -1,6 +1,7 @@
 ```{python, echo=True, results='markup', fig.show='hold'}
 
 import pandas as pd
+import altair as alt
 
 
 #title: "PS1"
